@@ -5,7 +5,7 @@ module NatOptics.NonNegative
     {- * Optics -}           refine, natPrism, intPrism,
                              natIso, textPrism, stringPrism,
 
-    {- * Re-exports -}       Natural, Integer, Prism',
+    {- * Re-exports -}       Natural, Integer, Prism', Iso',
                              view, review, preview
   ) where
 
