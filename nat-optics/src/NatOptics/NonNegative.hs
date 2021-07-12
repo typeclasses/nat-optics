@@ -35,7 +35,15 @@ newtype NonNegative number = NonNegative{ number :: number }
     deriving newtype (Eq, Ord, Show)
 
 {- | For any numeric type @n@,
-     @'NonNegative' n@ is a subset of @n@. -}
+     @'NonNegative' n@ is a subset of @n@.
+
+Examples:
+
+- @'preview' 'refine' (-1 :: 'Integer')@ = @'Nothing'@
+- @'preview' 'refine' (0 :: 'Integer')@ = @'Just' (NonNegative 0)@
+- @'preview' 'refine' (1 :: 'Integer')@ = @'Just' (NonNegative 1)@
+- @'preview' 'refine' (2 :: 'Integer')@ = @'Just' (NonNegative 2)@
+-}
 refine :: (Num n, Ord n) => Prism' n (NonNegative n)
 refine = prism' number verify
 

@@ -34,7 +34,15 @@ newtype Positive number = Positive{ number :: number }
     deriving newtype (Eq, Ord, Show)
 
 {- | For any numeric type @n@,
-     @'Positive' n@ is a subset of @n@.-}
+     @'Positive' n@ is a subset of @n@.
+
+Examples:
+
+- @'preview' 'refine' (-1 :: 'Integer')@ = @'Nothing'@
+- @'preview' 'refine' (0 :: 'Integer')@ = @'Nothing'@
+- @'preview' 'refine' (1 :: 'Integer')@ = @'Just' (Positive 1)@
+- @'preview' 'refine' (2 :: 'Integer')@ = @'Just' (Positive 2)@
+-}
 refine :: (Num n, Ord n) => Prism' n (Positive n)
 refine = prism' number verify
 
