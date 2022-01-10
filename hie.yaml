@@ -1,0 +1,11 @@
+cradle:
+  cabal:
+    - path: "./nat-optics/src"
+      component: "lib:nat-optics"
+    - path: "./nat-optics/test/TestPrelude.hs"
+      component: "test:NonNegative"
+    - path: "./nat-optics/test/NonNegative.hs"
+      component: "test:NonNegative"
+    - path: "./nat-optics/test/Positive.hs"
+      component: "test:Positive"
+
