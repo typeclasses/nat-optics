@@ -51,9 +51,7 @@ common dependencies
 common test
     import:             language
                       , dependencies
-    default-extensions: TemplateHaskell
-    build-depends:      hedgehog ^>= 1.0.4
-                      , nat-optics
+    build-depends:      nat-optics
     other-modules:      TestPrelude
 
 library

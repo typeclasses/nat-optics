@@ -24,9 +24,6 @@ constraints ghc = catMaybes
           GHC_8_10 -> Just "4.14.*"
           GHC_9_0  -> Just "4.15.*"
           GHC_9_2  -> Just "4.16.*"
-    , "hedgehog" .= case ghc of
-          GHC_8_10 -> Just "1.0.4"
-          _        -> Nothing
     , "optics-core" .= case ghc of
           GHC_8_10 -> Just "0.4"
           _        -> Nothing
