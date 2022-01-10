@@ -1,22 +1,34 @@
+import Data.Maybe
 import System.Environment
 import System.Process
 
 main =
   do
-    ghc <- getEnv "ghc"
-    callProcess "cabal" ("build" : "all" : constraints ghc)
+    ghc <- readGHC <$> getEnv "ghc"
+    targets <- return ["all"]
+    callProcess "cabal" $ ["build"] ++ targets ++ constraints ghc
+    callProcess "cabal" $ ["test"] ++ targets ++ ["--enable-tests"] ++ constraints ghc
 
-x .= y =
-    "--constraint=" ++ x ++ "==" ++ y
+x .= Just y  = Just ("--constraint=" ++ x ++ "==" ++ y)
+x .= Nothing = Nothing
 
-constraints ghc = case ghc of
-    "8.10" ->
-        [ "base"         .= "4.14.*"
-        , "hedghog"      .= "1.0.4"
-        , "text"         .= "1.2.3.*"
-        , "optics-core"  .= "0.4"
-        ]
-    "9.0" ->
-        [ "base"         .= "4.15.*"
-        , "text"         .= "1.2.4.*"
-        ]
+data GHC = GHC_8_10 | GHC_9_0
+
+readGHC s = case s of
+    "8.10" -> GHC_8_10
+    "9.0"  -> GHC_9_0
+
+constraints ghc = catMaybes
+    [ "base" .= case ghc of
+          GHC_8_10 -> Just "4.14.*"
+          GHC_9_0  -> Just "4.15.*"
+    , "hedgehog" .= case ghc of
+          GHC_8_10 -> Just "1.0.4"
+          _        -> Nothing
+    , "optics-core" .= case ghc of
+          GHC_8_10 -> Just "0.4"
+          _        -> Nothing
+    , "text" .= case ghc of
+          GHC_8_10 -> Just "1.2.3.*"
+          _        -> Nothing
+    ]
