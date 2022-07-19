@@ -1,3 +1,0 @@
-v1 - Initial release
-v1.0.0.1 - Added tests, added a few examples to the docs
-v1.0.0.2 - Support GHC 9.2 and text-2.0, drop hedgehog dependency
