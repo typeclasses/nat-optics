@@ -1,4 +1,8 @@
-module NatOptics.Internal ( strNat, textStr ) where
+module NatOptics.Internal
+  (
+    strNat, textStr,
+  )
+  where
 
 import Control.Monad   ( mfilter )
 import Data.Eq         ( (==) )

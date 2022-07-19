@@ -6,7 +6,7 @@ module NatOptics.Positive
                              textPrism, stringPrism,
 
     {- * Re-exports -}       Natural, Integer, Prism',
-                             view, review, preview
+                             view, review, preview,
   ) where
 
 import Control.Applicative ( (*>) )
