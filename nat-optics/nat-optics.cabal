@@ -37,6 +37,7 @@ common language
     default-language:   Haskell2010
     ghc-options:        -Wall
     default-extensions: DerivingStrategies
+                      , FlexibleContexts
                       , GeneralizedNewtypeDeriving
                       , NoImplicitPrelude
                       , TypeApplications
