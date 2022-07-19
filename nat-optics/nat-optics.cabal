@@ -17,7 +17,7 @@ description:
     to cover basic usage, but you probably also want to import
     the "Optics" module from the `optics` package.
 
-copyright: 2021 Mission Valley Software LLC
+copyright: 2021-2022 Mission Valley Software LLC
 license: MIT
 license-file: license.txt
 
