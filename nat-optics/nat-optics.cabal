@@ -46,12 +46,6 @@ common dependencies
                       , text        ^>= 1.2.3 || ^>= 2.0
                       , optics-core ^>= 0.4
 
-common test
-    import:             language
-                      , dependencies
-    build-depends:      nat-optics
-    other-modules:      TestPrelude
-
 library
     import:             language
                       , dependencies
@@ -62,14 +56,11 @@ library
                       , NatOptics.Signed
     other-modules:      NatOptics.Internal
 
-test-suite NonNegative
-    import:             test
+test-suite nat-optics-test
+    import:             language
+                      , dependencies
     type:               exitcode-stdio-1.0
     hs-source-dirs:     test
-    main-is:            NonNegative.hs
-
-test-suite Positive
-    import:             test
-    type:               exitcode-stdio-1.0
-    hs-source-dirs:     test
-    main-is:            Positive.hs
+    main-is:            Main.hs
+    build-depends:      nat-optics
+                      , hspec
