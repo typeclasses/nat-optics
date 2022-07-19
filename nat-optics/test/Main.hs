@@ -9,10 +9,10 @@ import Optics.Core (preview, review, view)
 
 import qualified NatOptics.Positive as Pos
 import qualified NatOptics.Positive.Unsafe as Pos
+import qualified NatOptics.Positive.Math as Pos.Math
 import qualified NatOptics.NonNegative as NN
 import qualified NatOptics.NonNegative.Unsafe as NN
 import qualified NatOptics.Signed as S
-import qualified NatOptics.Math as Math
 
 main :: IO ()
 main = hspec $ do
@@ -62,8 +62,10 @@ signedSpec = describe "Signed" $ do
             specify "-5" $ review S.intIso (S.Minus (Pos.PositiveUnsafe 5)) `shouldBe` (-5)
 
 mathSpec :: SpecWith ()
-mathSpec = describe "Math" $ do
-    describe "positiveMinus" $ do
-        specify "3 - 3" $ Math.positiveMinus (Pos.PositiveUnsafe 3) (Pos.PositiveUnsafe 3) `shouldBe` S.Zero @Int32
-        specify "3 - 5" $ Math.positiveMinus (Pos.PositiveUnsafe 3) (Pos.PositiveUnsafe 5) `shouldBe` S.Minus @Int32 (Pos.PositiveUnsafe 2)
-        specify "9 - 5" $ Math.positiveMinus (Pos.PositiveUnsafe 9) (Pos.PositiveUnsafe 5) `shouldBe` S.Plus @Int32 (Pos.PositiveUnsafe 4)
+mathSpec = describe "Positive math" $ do
+    describe "plus" $ do
+        specify "10 + 5" $ Pos.Math.plus (Pos.PositiveUnsafe 10) (Pos.PositiveUnsafe 5) `shouldBe` Pos.PositiveUnsafe @Int32 15
+    describe "minus" $ do
+        specify "3 - 3" $ Pos.Math.minus (Pos.PositiveUnsafe 3) (Pos.PositiveUnsafe 3) `shouldBe` S.Zero @Int32
+        specify "3 - 5" $ Pos.Math.minus (Pos.PositiveUnsafe 3) (Pos.PositiveUnsafe 5) `shouldBe` S.Minus @Int32 (Pos.PositiveUnsafe 2)
+        specify "9 - 5" $ Pos.Math.minus (Pos.PositiveUnsafe 9) (Pos.PositiveUnsafe 5) `shouldBe` S.Plus @Int32 (Pos.PositiveUnsafe 4)

@@ -51,10 +51,10 @@ library
     import:             language
                       , dependencies
     hs-source-dirs:     src
-    exposed-modules:    NatOptics.Math
-                      , NatOptics.NonNegative
+    exposed-modules:    NatOptics.NonNegative
                       , NatOptics.NonNegative.Unsafe
                       , NatOptics.Positive
+                      , NatOptics.Positive.Math
                       , NatOptics.Positive.Unsafe
                       , NatOptics.Signed
     other-modules:      NatOptics.Internal
