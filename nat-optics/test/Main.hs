@@ -4,41 +4,66 @@ import Test.Hspec
 import Prelude
 
 import Data.Int (Int16, Int32)
-import Data.Maybe (fromJust, isNothing)
-import Optics.Core (preview, review)
+import Data.Maybe (isNothing)
+import Optics.Core (preview, review, view)
 
 import qualified NatOptics.Positive as Pos
+import qualified NatOptics.Positive.Unsafe as Pos
 import qualified NatOptics.NonNegative as NN
+import qualified NatOptics.NonNegative.Unsafe as NN
+import qualified NatOptics.Signed as S
+import qualified NatOptics.Math as Math
 
 main :: IO ()
 main = hspec $ do
     nonNegativeSpec
     positiveSpec
+    signedSpec
+    mathSpec
 
 nonNegativeSpec :: SpecWith ()
 nonNegativeSpec = describe "NonNegative" $ do
     describe "0" $ do
-        let n = fromJust $ preview (NN.stringPrism @Int32) "0"
-        specify "refine" $ review NN.refine n `shouldBe` 0
-        specify "stringPrism" $ review NN.stringPrism n `shouldBe` "0"
+        specify "preview stringPrism" $ preview (NN.stringPrism @Int32) "0" `shouldBe` Just (NN.NonNegativeUnsafe 0)
+        specify "review refine" $ review NN.refine (NN.NonNegativeUnsafe @Int32 0) `shouldBe` 0
+        specify "review stringPrism" $ review NN.stringPrism (NN.NonNegativeUnsafe @Int32 0) `shouldBe` "0"
     describe "57" $ do
-        let n = fromJust $ preview (NN.stringPrism @Int32) "57"
-        specify "refine" $ review NN.refine n `shouldBe` 57
-        specify "stringPrism" $ review NN.stringPrism n `shouldBe` "57"
-    describe "stringPrism" $ do
+        specify "preview stringPrism" $ preview (NN.stringPrism @Int32) "57" `shouldBe` Just (NN.NonNegativeUnsafe 57)
+        specify "refine" $ review NN.refine (NN.NonNegativeUnsafe @Int32 57) `shouldBe` 57
+        specify "stringPrism" $ review NN.stringPrism (NN.NonNegativeUnsafe @Int32 57) `shouldBe` "57"
+    describe "preview stringPrism" $ do
         let examples = [ "-0", "-1", "00", "𝟝𝟟", "57 ", "057", "9999999999999999999999999999" ]
         specify "failures" $ all (isNothing . preview (NN.stringPrism @Int32)) examples
 
 positiveSpec :: SpecWith ()
 positiveSpec = describe "Positive" $ do
     describe "1" $ do
-        let n = fromJust $ preview (Pos.stringPrism @Int16) "1"
-        specify "refine" $ review Pos.refine n `shouldBe` 1
-        specify "stringPrism" $ review Pos.stringPrism n `shouldBe` "1"
+        specify "preview stringPrism" $ preview (Pos.stringPrism @Int16) "1" `shouldBe` Just (Pos.PositiveUnsafe 1)
+        specify "refine" $ review Pos.refine (Pos.PositiveUnsafe @Int16 1) `shouldBe` 1
+        specify "stringPrism" $ review Pos.stringPrism (Pos.PositiveUnsafe @Int16 1) `shouldBe` "1"
     describe "57" $ do
-        let n = fromJust $ preview (Pos.stringPrism @Int16) "57"
-        specify "refine" $ review Pos.refine n `shouldBe` 57
-        specify "stringPrism" $ review Pos.stringPrism n `shouldBe` "57"
+        specify "preview stringPrism" $ preview (Pos.stringPrism @Int16) "57" `shouldBe` Just (Pos.PositiveUnsafe 57)
+        specify "refine" $ review Pos.refine (Pos.PositiveUnsafe @Int16 57) `shouldBe` 57
+        specify "stringPrism" $ review Pos.stringPrism (Pos.PositiveUnsafe @Int16 57) `shouldBe` "57"
     describe "stringPrism" $ do
         let examples = [ "0", "-0", "-1", "00", "𝟝𝟟", "57 ", "057", "99999999999999999999999" ]
         specify "failures" $ all (isNothing . preview (Pos.stringPrism @Int16)) examples
+
+signedSpec :: SpecWith ()
+signedSpec = describe "Signed" $ do
+    describe "intIso" $ do
+        describe "view" $ do
+            specify "0" $ view S.intIso 0 `shouldBe` S.Zero
+            specify "3" $ view S.intIso 3 `shouldBe` S.Plus (Pos.PositiveUnsafe 3)
+            specify "-5" $ view S.intIso (-5) `shouldBe` S.Minus (Pos.PositiveUnsafe 5)
+        describe "review" $ do
+            specify "0" $ review S.intIso S.Zero `shouldBe` 0
+            specify "3" $ review S.intIso (S.Plus (Pos.PositiveUnsafe 3)) `shouldBe` 3
+            specify "-5" $ review S.intIso (S.Minus (Pos.PositiveUnsafe 5)) `shouldBe` (-5)
+
+mathSpec :: SpecWith ()
+mathSpec = describe "Math" $ do
+    describe "positiveMinus" $ do
+        specify "3 - 3" $ Math.positiveMinus (Pos.PositiveUnsafe 3) (Pos.PositiveUnsafe 3) `shouldBe` S.Zero @Int32
+        specify "3 - 5" $ Math.positiveMinus (Pos.PositiveUnsafe 3) (Pos.PositiveUnsafe 5) `shouldBe` S.Minus @Int32 (Pos.PositiveUnsafe 2)
+        specify "9 - 5" $ Math.positiveMinus (Pos.PositiveUnsafe 9) (Pos.PositiveUnsafe 5) `shouldBe` S.Plus @Int32 (Pos.PositiveUnsafe 4)

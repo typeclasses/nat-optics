@@ -1,3 +1,5 @@
+{-# language Trustworthy #-}
+
 module NatOptics.Internal
   (
     strNat, textStr,

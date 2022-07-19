@@ -1,3 +1,5 @@
+{-# language Trustworthy #-}
+
 module NatOptics.NonNegative
   (
     {- * Type constructor -} NonNegative,
@@ -12,7 +14,6 @@ module NatOptics.NonNegative
 import Control.Applicative ( (*>) )
 import Control.Monad       ( guard )
 import Data.Bits           ( Bits, toIntegralSized )
-import Data.Eq             ( Eq )
 import Data.Function       ( (.) )
 import Data.Functor        ( fmap, ($>), (<$>) )
 import Data.Maybe          ( Maybe )
@@ -29,10 +30,8 @@ import Optics.Prism        ( Prism', prism' )
 import Optics.Review       ( review )
 import Prelude             ( Integer, Integral, Num,
                              fromIntegral, toInteger )
-import Text.Show           ( Show )
 
-newtype NonNegative number = NonNegative{ number :: number }
-    deriving newtype (Eq, Ord, Show)
+import NatOptics.NonNegative.Unsafe (NonNegative (..))
 
 {- | For any numeric type @n@,
      @'NonNegative' n@ is a subset of @n@.
@@ -53,7 +52,7 @@ natPrism :: (Integral n, Bits n) => Prism' Natural (NonNegative n)
 natPrism =
     prism'
         (fromIntegral . number)
-        (fmap NonNegative . toIntegralSized) {- No need to verify
+        (fmap NonNegativeUnsafe . toIntegralSized) {- No need to verify
             here, because Natural is always non-negative. The only
             check here is when converting from 'Natural' to ensure
             that it does not overflow the max bound of 'n'. -}
@@ -65,7 +64,7 @@ intPrism = prism' (toInteger . number) verifyAndResize
 
 {- | 'Natural' and @'NonNegative' 'Natural'@ are the same thing. -}
 natIso :: Iso' Natural (NonNegative Natural)
-natIso = iso NonNegative number
+natIso = iso NonNegativeUnsafe number
 
 stringPrism :: (Integral n, Bits n) => Prism' String (NonNegative n)
 stringPrism = strNat % natPrism
@@ -74,8 +73,8 @@ textPrism :: (Integral n, Bits n) => Prism' Text (NonNegative n)
 textPrism = textStr % stringPrism
 
 verify :: (Ord n, Num n) => n -> Maybe (NonNegative n)
-verify n = guard (n >= 0) $> NonNegative n
+verify n = guard (n >= 0) $> NonNegativeUnsafe n
 
 verifyAndResize :: (Integral a, Integral b, Bits a, Bits b)
                 => a -> Maybe (NonNegative b)
-verifyAndResize x = verify x *> (NonNegative <$> toIntegralSized x)
+verifyAndResize x = verify x *> (NonNegativeUnsafe <$> toIntegralSized x)

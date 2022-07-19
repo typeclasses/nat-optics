@@ -1,3 +1,5 @@
+{-# language Trustworthy #-}
+
 module NatOptics.Positive
   (
     {- * Type constructor -} Positive,
@@ -12,7 +14,6 @@ module NatOptics.Positive
 import Control.Applicative ( (*>) )
 import Control.Monad       ( guard )
 import Data.Bits           ( Bits, toIntegralSized )
-import Data.Eq             ( Eq )
 import Data.Function       ( (.) )
 import Data.Functor        ( ($>), (<$>) )
 import Data.Maybe          ( Maybe )
@@ -28,10 +29,8 @@ import Optics.Prism        ( Prism', prism' )
 import Optics.Review       ( review )
 import Prelude             ( Integer, Integral, Num,
                              fromIntegral, toInteger )
-import Text.Show           ( Show )
 
-newtype Positive number = Positive{ number :: number }
-    deriving newtype (Eq, Ord, Show)
+import NatOptics.Positive.Unsafe (Positive (..))
 
 {- | For any numeric type @n@,
      @'Positive' n@ is a subset of @n@.
@@ -63,7 +62,7 @@ textPrism :: (Integral n, Bits n) => Prism' Text (Positive n)
 textPrism = textStr % stringPrism
 
 verify :: (Num n, Ord n) => n -> Maybe (Positive n)
-verify n = guard (n > 0) $> Positive n
+verify n = guard (n > 0) $> PositiveUnsafe n
 
 verifyAndResize :: (Integral a, Integral b, Bits a, Bits b) => a -> Maybe (Positive b)
-verifyAndResize x = verify x *> (Positive <$> toIntegralSized x)
+verifyAndResize x = verify x *> (PositiveUnsafe <$> toIntegralSized x)

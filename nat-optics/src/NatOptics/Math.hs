@@ -1,3 +1,5 @@
+{-# language Trustworthy #-}
+
 module NatOptics.Math
   (
     positiveMinus,
