@@ -60,6 +60,15 @@ signedSpec = describe "Signed" $ do
             specify "0" $ review S.intIso S.Zero `shouldBe` 0
             specify "3" $ review S.intIso (S.Plus (Pos.PositiveUnsafe 3)) `shouldBe` 3
             specify "-5" $ review S.intIso (S.Minus (Pos.PositiveUnsafe 5)) `shouldBe` (-5)
+    describe "intNatIso" $ do
+        describe "view" $ do
+            specify "0" $ view S.intNatIso 0 `shouldBe` S.Zero
+            specify "3" $ view S.intNatIso 3 `shouldBe` S.Plus (Pos.PositiveUnsafe 3)
+            specify "-5" $ view S.intNatIso (-5) `shouldBe` S.Minus (Pos.PositiveUnsafe 5)
+        describe "review" $ do
+            specify "0" $ review S.intNatIso S.Zero `shouldBe` 0
+            specify "3" $ review S.intNatIso (S.Plus (Pos.PositiveUnsafe 3)) `shouldBe` 3
+            specify "-5" $ review S.intNatIso (S.Minus (Pos.PositiveUnsafe 5)) `shouldBe` (-5)
 
 mathSpec :: SpecWith ()
 mathSpec = describe "Positive math" $ do
