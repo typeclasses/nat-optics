@@ -5,6 +5,7 @@ import Prelude
 
 import Data.Int (Int16, Int32)
 import Data.Maybe (isNothing)
+import Numeric.Natural (Natural)
 import Optics.Core (preview, review, view)
 
 import qualified NatOptics.Positive as Pos
@@ -75,6 +76,6 @@ mathSpec = describe "Positive math" $ do
     describe "plus" $ do
         specify "10 + 5" $ Pos.Math.plus (Pos.PositiveUnsafe 10) (Pos.PositiveUnsafe 5) `shouldBe` Pos.PositiveUnsafe @Int32 15
     describe "minus" $ do
-        specify "3 - 3" $ Pos.Math.minus (Pos.PositiveUnsafe 3) (Pos.PositiveUnsafe 3) `shouldBe` S.Zero @Int32
-        specify "3 - 5" $ Pos.Math.minus (Pos.PositiveUnsafe 3) (Pos.PositiveUnsafe 5) `shouldBe` S.Minus @Int32 (Pos.PositiveUnsafe 2)
-        specify "9 - 5" $ Pos.Math.minus (Pos.PositiveUnsafe 9) (Pos.PositiveUnsafe 5) `shouldBe` S.Plus @Int32 (Pos.PositiveUnsafe 4)
+        specify "3 - 3" $ Pos.Math.minus (Pos.PositiveUnsafe 3) (Pos.PositiveUnsafe 3) `shouldBe` S.Zero @Natural
+        specify "3 - 5" $ Pos.Math.minus (Pos.PositiveUnsafe 3) (Pos.PositiveUnsafe 5) `shouldBe` S.Minus @Natural (Pos.PositiveUnsafe 2)
+        specify "9 - 5" $ Pos.Math.minus (Pos.PositiveUnsafe 9) (Pos.PositiveUnsafe 5) `shouldBe` S.Plus @Natural (Pos.PositiveUnsafe 4)
