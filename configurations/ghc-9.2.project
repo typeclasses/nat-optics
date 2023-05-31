@@ -1,5 +1,0 @@
-packages: ./nat-optics
-
-constraints:
-    base == 4.16.*
-  , hspec == 2.10.*
