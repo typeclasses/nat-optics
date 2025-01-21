@@ -1,7 +1,7 @@
 cabal-version: 3.0
 
 name: nat-optics
-version: 1.0.1.0
+version: 1.0.1.1
 category: Numeric, Optics
 
 synopsis:
@@ -29,6 +29,8 @@ bug-reports: https://github.com/typeclasses/nat-optics/issues
 
 build-type: Simple
 
+extra-source-files: *.md
+
 source-repository head
   type: git
   location: https://github.com/typeclasses/nat-optics
@@ -43,8 +45,8 @@ common language
                       , TypeApplications
 
 common dependencies
-    build-depends:      base ^>= 4.15 || ^>= 4.16 || ^>= 4.17
-                      , text ^>= 1.2.3.2 || ^>= 2.0
+    build-depends:      base ^>= 4.15 || ^>= 4.16 || ^>= 4.17 || ^>= 4.18 || ^>= 4.19
+                      , text ^>= 1.2.3.2 || ^>= 2.0 || ^>= 2.1
                       , optics-core ^>= 0.4
 
 library
@@ -66,4 +68,4 @@ test-suite nat-optics-test
     hs-source-dirs:     test
     main-is:            Main.hs
     build-depends:      nat-optics
-                      , hspec ^>= 2.8 || ^>= 2.9 || ^>= 2.10
+                      , hspec ^>= 2.8 || ^>= 2.9 || ^>= 2.10 || ^>= 2.11
